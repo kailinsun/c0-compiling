@@ -301,14 +301,14 @@ int main(int argc, char** argv) {
 	argparse::ArgumentParser program("cc0");
 	program.add_argument("input")
 		.help("speicify the file to be compiled.");
-	program.add_argument("-t")
-		.default_value(false)
-		.implicit_value(true)
-		.help("perform tokenization for the input file.");
-	program.add_argument("-l")
-		.default_value(false)
-		.implicit_value(true)
-		.help("perform syntactic analysis for the input file.");
+//	program.add_argument("-t")
+//		.default_value(false)
+//		.implicit_value(true)
+//		.help("perform tokenization for the input file.");
+//	program.add_argument("-l")
+//		.default_value(false)
+//		.implicit_value(true)
+//		.help("perform syntactic analysis for the input file.");
     program.add_argument("-s")
             .default_value(false)
             .implicit_value(true)
@@ -358,10 +358,6 @@ int main(int argc, char** argv) {
 //	else
 //		output = &std::cout;
 //
-//    if (program["-s"] == true && program["-c"] == true) {
-//        fmt::print(stderr, "You can only perform -s or -c at one time.");
-//        exit(2);
-//    }
 //	if (program["-t"] == true && program["-l"] == true) {
 //		fmt::print(stderr, "You can only perform tokenization or syntactic analysis at one time.");
 //		exit(2);
@@ -372,6 +368,12 @@ int main(int argc, char** argv) {
 //	else if (program["-l"] == true) {
 //		Analyse(*input, *output);
 //	}
+
+
+    if (program["-s"] == true && program["-c"] == true) {
+        fmt::print(stderr, "You can only perform -s or -c at one time.");
+        exit(2);
+    }
     if (program["-s"] == true) {
         if(output_file!="-"){
             outf.open(output_file, std::ios::out | std::ios::trunc);
