@@ -299,6 +299,7 @@ namespace miniplc0 {
             _funInstruction[_instructionIndex]._funins.emplace_back(RET,0,0);
         }
         else if(_fun[_instructionIndex]._haveReturnValue==1){
+            _funInstruction[_instructionIndex]._funins.emplace_back(IPUSH,0,0);
             _funInstruction[_instructionIndex]._funins.emplace_back(IRET,0,0);
         }
         int nvar=_var.size();
@@ -936,6 +937,18 @@ namespace miniplc0 {
             return std::make_optional<CompilationError>(_current_pos, ErrorCode::ErrNeedIdentifier);
         auto funToken=next;
 
+
+        int n=_var.size();
+        int index=-1;
+        for(int i=n-1;i>=0;i--){
+            if(funToken.value().GetValueString()==_var[i].getName()){
+                index=i;
+                break;
+            }
+        }
+        if(index!=-1)
+            return std::make_optional<CompilationError>(_current_pos, ErrorCode::ErrIncompleteFunctionCall);
+
         int nf=_fun.size();
         bool haveFunction= false;
         for(int i=0;i<nf;i++){
@@ -1050,9 +1063,9 @@ namespace miniplc0 {
             if(s==_var[i].getName() && _var[i].getLevel()==level)//各个变量的类型,0为常量,1为未赋值变量，2为已赋值变量,3为函数
                 return true;
         }
-        if(isFunctionName(s)){
-            return true;
-        }
+//        if(isFunctionName(s)){
+//            return true;
+//        }
         return false;
 	}
     bool Analyser::isConstant(const std::string&s,int32_t level) {
