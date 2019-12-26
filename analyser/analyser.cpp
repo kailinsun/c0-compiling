@@ -451,6 +451,7 @@ namespace miniplc0 {
                     _funInstruction[_instructionIndex]._funins[index2].SetX(off2);
                 }
                 else{
+                    _funInstruction[_instructionIndex]._funins[index2].SetX(index2+1);
                     unreadToken();
                 }
 
@@ -529,14 +530,16 @@ namespace miniplc0 {
                 }
                 if(index==-1)
                     return std::make_optional<CompilationError>(_current_pos, ErrorCode::ErrNotDeclared);
-                if(_var[index].getType()==1)
-                    return std::make_optional<CompilationError>(_current_pos, ErrorCode::ErrNotInitialized);
+                if(_var[index].getType()==0)
+                    return std::make_optional<CompilationError>(_current_pos, ErrorCode::ErrAssignToConstant);
                 addr=_var[index].getAddress();
                 int _offset=addr-_indexTable[_var[index].getLevel()];;
                 int _level_diff=1-_var[index].getLevel();
                 _funInstruction[_instructionIndex]._funins.emplace_back(LOADA,_level_diff,_offset);
                 _funInstruction[_instructionIndex]._funins.emplace_back(ISCAN,0,0);
                 _funInstruction[_instructionIndex]._funins.emplace_back(ISTORE,0,0);
+
+                _var[index]._type=2;
 
                 next=nextToken();
                 if(!next.has_value()||next.value().GetType()!=TokenType::RIGHT_BRACKET)
